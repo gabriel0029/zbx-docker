@@ -1,7 +1,7 @@
 # Docker Zabbix 
 Projeto Docker compose Zabbix 5.0.14 + TimescaleDB 12 + Nginx + Grafana 7.0.10
 
-# Instalção do Docker e Docker Compose, caso não tenha.
+# Instalação do Docker e Docker Compose, caso não tenha.
 Dê permissão chmod +x ao script "inicio.sh" e execute em seguida para instalar o Docker e Docker Compose.
 
 # Executando o compose.
