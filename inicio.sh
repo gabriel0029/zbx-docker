@@ -26,3 +26,13 @@ echo ""
 
 docker --version
 docker-compose --version
+
+echo ""
+echo "Criando diretorios"
+echo ""
+
+ATUAL_DIR=${pwd}
+mkdir -p zbx_env/var/lib/zabbix
+cd zbx_env/var/lib/zabbix/
+mkdir -p alertscripts export externalscripts mibs modules snmptraps
+cd $ATUAL_DIR
