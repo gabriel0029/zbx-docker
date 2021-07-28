@@ -13,7 +13,10 @@ Entre no diretorio que foi feito o download.
 #docker container ls ou #docker-compose ps
 
 # Acessando o container
-#docker container exec -ti [Container ID] bash
+#docker container exec -ti [Container Name ou Container ID] sh
+
+# Visializando os logs
+#docker container logs [Container Name ou Container ID]
 
 # Ajustando a Coleta do zabbix server
 Edite o host "Zabbix server" na interface de monitoramento informe o nome do container do agent e modifique de "IP" para "DNS" em "Connect to"
