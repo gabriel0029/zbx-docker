@@ -1,0 +1,23 @@
+apiVersion: 1
+
+datasources:
+- name: Zabbix
+  type: alexanderzobnin-zabbix-datasource
+  access: browser
+  url: http://172.17.0.1/api_jsonrpc.php
+  isDefault: true
+  jsonData:
+    username: Admin
+    password: zabbix
+    trends: false
+    #trendsFrom: "7d"
+    #trendsRange: "4d"
+    #cacheTTL: "1h"
+    alerting: true
+    addThresholds: false
+    alertingMinSeverity: 3
+    disableReadOnlyUsersAck: false
+    disableDataAlignment: false
+    useZabbixValueMapping: true
+  version: 1
+  editable: true

@@ -1,0 +1,111 @@
+version: "3.7"
+services:
+  db:
+    #image: postgres:12-alpine
+    image: timescale/timescaledb:latest-pg12
+    volumes:
+    - dbdados:/var/lib/postgresql/data
+    env_file:
+    - .env_db_pgsql
+    command: ["-c", "max_connections=50"]
+    #restart_policy:
+    #   condition: always
+    ports:
+    - "5432:5432"
+    networks:
+    - monitoramento
+
+  server:
+    image: zabbix/zabbix-server-pgsql:alpine-5.0.14
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+    depends_on:
+    - db
+    volumes:
+    - ./zbx_env/usr/lib/zabbix/alertscripts:/usr/lib/zabbix/alertscripts:ro
+    - ./zbx_env/usr/lib/zabbix/externalscripts:/usr/lib/zabbix/externalscripts:ro
+    - ./zbx_env/var/lib/zabbix/export:/var/lib/zabbix/export:rw
+    - ./zbx_env/var/lib/zabbix/modules:/var/lib/zabbix/modules:ro
+    - ./zbx_env/var/lib/zabbix/mibs:/var/lib/zabbix/mibs:ro
+    - ./zbx_env/var/lib/zabbix/snmptraps:/var/lib/zabbix/snmptraps:ro
+    env_file:
+    - .env_db_pgsql
+      #restart_policy:
+      # condition: always
+    ports:
+    - "10051:10051"
+    networks:
+    - monitoramento      
+
+  web:
+    image: zabbix/zabbix-web-nginx-pgsql:alpine-5.0.14
+    deploy:
+      resources:
+        limits:
+          cpus: "0.2"
+          memory: 256M
+    depends_on:
+    - db
+    - server
+    env_file:
+    - .env_db_pgsql
+    - zabbix.config
+    #restart_policy:
+      # condition: always
+    ports:
+    - "80:8080"
+    networks:
+    - monitoramento
+
+  agent:
+    image: zabbix/zabbix-agent:alpine-5.0.14
+    deploy:
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: 50M
+    depends_on:
+    - server
+    volumes:
+    - /var/run:/var/run
+    - /proc:/usr/proc
+    - /sys:/usr/sys
+    - /:/rootfs
+    #hostname: server
+    environment:
+      ZBX_HOSTNAME: Zabbix server
+      ZBX_SERVER_HOST: server
+    #restart_policy:
+      # condition: always
+    ports:
+    - "10050:10050"
+    networks:
+    - monitoramento
+
+  grafana:
+    image: grafana/grafana:7.5.10
+    deploy:
+      resources:
+        limits:
+          cpus: "0.2"
+          memory: 100M
+    volumes:
+    - grafana_data:/var/lib/grafana
+    - ./grafana-provisioning/:/etc/grafana/provisioning
+    env_file:
+    - grafana.config
+    #restart_policy:
+      # condition: always
+    ports:
+    - "3000:3000"
+    networks:
+    - monitoramento
+
+networks:
+  monitoramento:
+volumes:
+  dbdados:
+  grafana_data:
