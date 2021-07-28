@@ -17,6 +17,11 @@ Entre no diretorio que foi feito o download.
 # Acessando o container
 #docker container exec -ti [Container ID] bash
 
+# Ajustando a Coleta do zabbix server
+Edite o host "Zabbix server" na interface de monitoramento informe o nome do container do agent e modifique de "IP" para "DNS" em "Connect to"
+
+![image](https://user-images.githubusercontent.com/87427032/127325078-5d641c9c-c63f-4f43-b78a-a3b1fcdc06a4.png)
+
 # Configuração Grafana
 
 Habilite o plugin.
